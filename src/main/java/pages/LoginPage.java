@@ -12,9 +12,19 @@ public class LoginPage extends BasePage {
     private final SelenideElement USERNAME_FIELD = $(By.cssSelector("#userName"));
     private final SelenideElement PASSWORD_FIELD = $(By.cssSelector("#password"));
 
-    public LoginPage fillInLoginFields(String email, String password) {
-        USERNAME_FIELD.setValue(email);
+    public LoginPage fillInUserName(String userName) {
+        USERNAME_FIELD.setValue(userName);
+        return this;
+    }
+
+    public LoginPage fillInPassword(String password) {
         PASSWORD_FIELD.setValue(password);
         return this;
     }
+
+    public LoginPage loginButtonClick() {
+        LOGIN_BUTTON.click();
+        return this;
+    }
+
 }

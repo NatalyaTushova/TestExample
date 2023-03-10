@@ -41,20 +41,21 @@ public class BaseAllTest {
             .build();
 
     //parameters from requests
-    private static Response CREATE_USER_RESPONSE, CREATE_TOKEN_RESPONSE;
-    private static String UUID, TOKEN;
+    private static Response createUserResponse, createTokenResponse;
+    private static String uidd, token;
 
     // create user
     protected void createUser() {
 
-        CREATE_USER_RESPONSE = given().spec(postRequestSpec)
+        createUserResponse = given().spec(postRequestSpec)
                 .post("/Account/v1/User")
                 .then().statusCode(201).extract().response();
     }
 
     //get UUID from user creation
-    private void getUserId() {
-        UUID =  CREATE_USER_RESPONSE.path("userID");
+    protected void getUserId() {
+
+        uidd =  createUserResponse.path("userID");
     }
 
     // create user token
@@ -64,26 +65,23 @@ public class BaseAllTest {
         requestBody.put("password", password);
 
 
-        CREATE_TOKEN_RESPONSE = given().spec(postRequestSpec)
+        createTokenResponse = given().spec(postRequestSpec)
                 .post("/Account/v1/GenerateToken")
                 .then().statusCode(200).extract().response();
     }
 
     //get user token from token creation
-    private void getUserToken() {
-        TOKEN =  CREATE_TOKEN_RESPONSE.path("token");
+    protected void getUserToken() {
+
+        token =  createTokenResponse.path("token");
     }
 
 
     // delete user
     protected void deleteUser() {
-        getUserId();
-        createToken();
-        getUserToken();
-
         given().spec(delRequestSpec)
-                .header("Authorization", "Bearer " + TOKEN)
-                .pathParam("UUID", UUID)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("UUID", uidd)
                 .delete("/Account/v1/User/{UUID}")
                 .then().statusCode(204);
     }
