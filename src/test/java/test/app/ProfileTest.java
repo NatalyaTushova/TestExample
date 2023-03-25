@@ -25,5 +25,11 @@ public class ProfileTest extends BaseTest{
         addBookToCollection();
         setCookies();
 
+        ProfilePage profilePage = new ProfilePage();
+        profilePage.openProfile()
+                .deleteBookFromCollection()
+                .approveDeletingBook()
+                .checkBookNotInCollection(getNameOfBook());
+
     }
 }
