@@ -1,35 +1,36 @@
 package test.app;
 
+import api.BookDataAPI;
 import org.junit.jupiter.api.Test;
 import pages.ProfilePage;
 
 public class ProfileTest extends BaseTest{
 
+    BookDataAPI bookDataAPI = new BookDataAPI();
+
     @Test
     public void checkBookSearch(){
-        getUserTokens();
-        getIdOfBook();
-        addBookToCollection();
+        bookDataAPI.getIdOfBook();
+        bookDataAPI.addBookToCollection(token, uidd);
         setCookies();
 
         ProfilePage profilePage = new ProfilePage();
         profilePage.openProfile()
-                .fillInSearchLine(getNameOfBook())
-                .checkBookInCollection(getNameOfBook());
+                .fillInSearchLine(bookDataAPI.getNameOfBook())
+                .checkBookInCollection(bookDataAPI.getNameOfBook());
     }
 
     @Test
     public void checkBookIsDeleted(){
-        getUserTokens();
-        getIdOfBook();
-        addBookToCollection();
+        bookDataAPI.getIdOfBook();
+        bookDataAPI.addBookToCollection(token, uidd);
         setCookies();
 
         ProfilePage profilePage = new ProfilePage();
         profilePage.openProfile()
                 .deleteBookFromCollection()
                 .approveDeletingBook()
-                .checkBookNotInCollection(getNameOfBook());
+                .checkBookNotInCollection(bookDataAPI.getNameOfBook());
 
     }
 }
