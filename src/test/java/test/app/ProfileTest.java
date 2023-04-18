@@ -33,4 +33,5 @@ public class ProfileTest extends BaseTest{
                 .checkBookNotInCollection(bookDataAPI.getNameOfBook());
 
     }
+
 }

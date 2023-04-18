@@ -1,9 +1,8 @@
 package api;
 
-import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
+import utils.RequestSpecUtil;
 
 import static environment.Environment.API_URL;
 import static io.restassured.RestAssured.given;
@@ -13,12 +12,7 @@ public class BookDataAPI {
     //parameters from requests
     private static Response bookListResponse;
     private static String isbn, bookName;
-
-    private RequestSpecification withAuthRequestSpec = new RequestSpecBuilder()
-            .setBaseUri(API_URL)
-            .setContentType("application/json")
-            .build();
-
+    private static RequestSpecUtil requestSpecUtil;
 
     //requests
     private void getBookList(){
@@ -31,10 +25,9 @@ public class BookDataAPI {
     }
 
     public void addBookToCollection(String token, String uidd) {
-        given().spec(withAuthRequestSpec)
-                .header("Authorization", "Bearer " + token)
-                .body("{\"userId\":\""+uidd+
-                        "\",\"collectionOfIsbns\":[{\"isbn\":\""+isbn+"\"}]}")
+        given(requestSpecUtil.AuthRequestSpecWithBody(token,
+                "{\"userId\":\""+uidd+
+                        "\",\"collectionOfIsbns\":[{\"isbn\":\""+isbn+"\"}]}"))
                 .post("BookStore/v1/Books")
                 .then().statusCode(201);
     }

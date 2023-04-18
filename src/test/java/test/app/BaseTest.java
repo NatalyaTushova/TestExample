@@ -1,28 +1,24 @@
 package test.app;
 
-import api.UserDataAPI;
 import com.codeborne.selenide.Configuration;
-import com.github.javafaker.Faker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Cookie;
+import api.UserDataAPI;
+import data_provider.UserData;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static environment.Environment.SITE_URL;
-import static io.restassured.RestAssured.given;
 
 public class BaseTest {
 
     {
-        generateData();
-    }
-
-    private void generateData() {
-        Faker faker = new Faker();
-        userName = faker.name().username();
-        password = faker.regexify("[a-z][A-Z][1-9]{6}[!]");
+        UserData userData = new UserData();
+        userName = userData.getUserName();
+        password = userData.getPassword();
     }
 
 
@@ -36,7 +32,7 @@ public class BaseTest {
         Configuration.baseUrl= SITE_URL;
 
         //fix chrome bug with 403 error
-        System.setProperty("chromeoptions.args", "--remote-allow-origins=*");
+        //System.setProperty("chromeoptions.args", "--remote-allow-origins=*");
     }
 
    @BeforeEach
@@ -46,13 +42,13 @@ public class BaseTest {
         uidd = userDataAPI.getUserId();
         userDataAPI.createToken(userName, password);
         token = userDataAPI.getUserToken();
+
     }
 
     @AfterEach
     public void clearEnvironment() {
 
         userDataAPI.deleteUser();
-
         clearBrowserLocalStorage();
         clearBrowserCookies();
     }
